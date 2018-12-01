@@ -1,6 +1,7 @@
 #include <vector>
 #include <iostream>
 #include <climits>
+#include <queue>
 
 using Vertex = int;
 
@@ -42,45 +43,89 @@ Graph::Graph() {
     add_edge(2,1,4);
     add_edge(3,1,5);
     add_edge(3,2,6);
+    add_edge(3,4,4);
     add_edge(4,2,3);
     add_edge(4,3,3);
+    add_edge(4,5,4);
     add_edge(5,2,10);
-    add_edge(4,3,3);
-    add_edge(6,3,9);
-    add_edge(3,4,4);
     add_edge(5,4,6);
     add_edge(5,6,2);
+    add_edge(6,3,9);
     add_edge(6,4,3);
     add_edge(6,5,3);
     add_edge(7,5,2);
     add_edge(7,6,2);    
 }
 
+void print_bf(Vertex s, int V, std::vector<Vertex> pi, std::vector<int> d) {
+    std::cout << "Start Vertex: " << s << std::endl;
+    std::cout << "Vertex:   ";
+    for (int i = 1; i <= V; ++i) {
+        std::cout << i << " ";
+    }
+    std::cout << std::endl;
+    std::cout << "Parent:   ";
+    for (auto parents: pi) {
+        std::cout << parents << " ";
+    }
+    std::cout << std::endl;
+    std::cout << "Distance: ";
+    for (auto dist: d) {
+        std::cout << dist << " ";
+    }
+    std::cout << std::endl;
+}
+
 bool Graph::BellmanFord(Vertex s) {
     std::vector<Vertex> pi;
     std::vector<int> d;
     for (auto v: this->vertices) {
-        d[v] = pi[v] = INT_MAX;
+        d.push_back(99999);
+        pi.push_back(0);
     }
-    d[s] = 0;
+    d[s - 1] = 0;
     for (int i = 1; i < vertices.size(); ++i) {
         for (auto edge: this->edges) {
-            if (d[edge.to] > d[edge.from] + edge.distance) {
-                d[edge.to] > d[edge.from] + edge.distance;
-                pi[edge.to] = edge.from;
+            if (d[edge.to - 1] > d[edge.from - 1] + edge.distance) {
+                d[edge.to - 1] = d[edge.from - 1] + edge.distance;
+                pi[edge.to - 1] = edge.from - 1;
             }
         }
     }
     for (auto edge: this->edges) {
-        if (d[edge.to] > d[edge.from] + edge.distance)
+        if (d[edge.to - 1] > d[edge.from - 1] + edge.distance)
             return false;
     }
+    print_bf(s, vertices.size(), pi, d);    
+    
     return true;
 }
+
+/*
+bool Graph::Dijkstra(Vertex s) {
+    std::vector<Vertex> pi;
+    std::vector<int> d;
+    std::priority_queue<int, std::vector<Vertex >, std::greater<int> > Q;
+        for (auto v: this->vertices) {
+        d.push_back(99999);
+        pi.push_back(0);
+    }
+    d[s - 1] = 0;
+    for (v) 
+        Q.push(i);
+
+
+    print_bf(s, vertices.size(), pi, d);    
+    
+    return true;
+}
+*/
+
 
 
 int main() {  
     Graph graph;
-    graph.BellmanFord(1);
+    for (int i = 1; i <= 7; ++i)
+        graph.BellmanFord(i);
 
 }
